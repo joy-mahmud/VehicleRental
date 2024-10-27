@@ -4,10 +4,31 @@ class Vehicle:
         self.name=name
         self.vehicle_type=vehicle_type
         self.rented=False
-userList=[]
-class CreateUser:
-    def __init__(self,id,username,role):
-        userList.append(User(id,username,role))
+
+class UserControl:
+    def __init__(self):
+        self.userList=[]
+
+    def add_user(self, currentUser, userid,username,role):
+        if currentUser.role == 'admin':
+            self.userList.append(User(userid,username,role))
+            print(f"user has been added successfully")
+            return
+        else:
+            print("you are not an admin")
+
+    def modify_user(self, currentUser, userid, new_username: None, new_role: None):
+        if currentUser.role == 'admin':
+            for user in self.userList:
+                if user.id == userid:
+                    if new_username:
+                        user.username = new_username
+                    if new_role:
+                        user.role = new_role
+                print(f"data of id:{userid} has been changed successfully")
+                return
+        else:
+            print("you are not an admin")
 
 class User:
     def __init__(self,id,username,role):
@@ -15,6 +36,8 @@ class User:
         self.username=username
         self.role=role
 
+    def __str__(self):
+        return self.username
 
 class Car(Vehicle):
     def __init__(self,name):
@@ -30,17 +53,19 @@ class RentalService:
         bmw=Car("bmw")
         yamaha = Bike("yamaha")
         self.vehicles=[lamborgini,bmw,yamaha]
-        self.users = {"joy": "admin", "rohim": "user"}
-    def add_vehicles(self,username,vehicle_name,vehicle_type):
+
+    def add_vehicles(self,user,vehicle_name,vehicle_type):
         try:
-            if(self.users[username]=='admin'):
+            if(user.role=='admin'):
                 if (vehicle_type == "car"):
                     new_vehicle = Car(vehicle_name)
                     self.vehicles.append(new_vehicle)
+                    print(f"{user.username},you have successfully added the {vehicle_type}")
                 elif(vehicle_type=="bike"):
                     new_vehice = Bike(vehicle_name)
                     self.vehicles.append(new_vehice)
-            elif(self.users[username]=="user"): print("Only admin can add vehicles")
+                    print(f"{user.username},you have successfully added the {vehicle_type}")
+            elif(user.role=="user"): print("Only admin can add vehicles")
         except:
             print("you are not registered yet")
     def rent_vehicle(self,name):
@@ -64,7 +89,14 @@ rental_service=RentalService()
 #
 # rental_service.rent_vehicle('ferrari')
 # rental_service.add_vehicles('rohim','ferrari','car')
+user_control=UserControl()
+joy = User(101,"joy","admin")
+print(joy)
+user_control.add_user(joy,101,'rohim','user')
+user_control.add_user(joy,102,'korim','user')
+rental_service.add_vehicles(joy,"ferrari","car")
+print('all users:')
+print(user_control.userList)
+for user in user_control.userList:
+    print(f'username:{user.username}')
 
-CreateUser(101,"joy","admin")
-CreateUser(102,"mahmud","user")
-print(userList)
