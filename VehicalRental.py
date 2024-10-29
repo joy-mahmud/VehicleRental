@@ -4,7 +4,8 @@ class Vehicle:
         self.name=name
         self.vehicle_type=vehicle_type
         self.rented=False
-
+    def __str__(self):
+        return f"{self.name}({self.vehicle_type})"
 class UserControl:
     def __init__(self):
         self.userList=[]
@@ -98,7 +99,7 @@ user_control.add_user(joy,101,'rohim','user')
 user_control.add_user(joy,102,'korim','user')
 rental_service.add_vehicles(joy,"ferrari","car")
 print('all users:')
-print(user_control.userList)
+print(Vehicle('bmw','car'))
 for user in user_control.userList:
     print(f'username:{user.username}')
 
